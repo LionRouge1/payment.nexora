@@ -1,0 +1,15 @@
+{
+    "name": "crowdfrica/payment.nexora",
+    "autoload": {
+        "psr-4": {
+            "Crowdfrica\\PaymentNexora\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "LionRouge1",
+            "email": "matchoudiavlessi@gmail.com"
+        }
+    ],
+    "require": {}
+}
