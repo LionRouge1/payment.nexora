@@ -1,3 +1,7 @@
+<?php
+  use App\Helpers\AssetHelper;
+  use App\Helpers\RouteHelper;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,8 +9,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title><?= htmlspecialchars($title ?? 'Payment Nexora') ?></title>
   
-   
-    <link rel="stylesheet" href="./assets/css/style.css">
     <link rel="icon" href="./assets/images/logo.jpg">
     <!-- Linking Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
@@ -26,11 +28,14 @@
     />
 
     <link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-/>
-<!-- <link rel="stylesheet" href="styles.css" /> -->
-<script src="https://js.paystack.co/v2/inline.js"></script>
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <!-- <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="stylesheet" href="./assets/css/thanks.css"> -->
+    <?= AssetHelper::css(['style', 'thanks'], true) ?>
+    <script src="https://js.paystack.co/v2/inline.js"></script>
+</head>
 <body>
 
     <main>
@@ -38,8 +43,8 @@
           <div class="container-fluid d-flex justify-content-between align-items-center position-relative" style="min-height: 50px;">
             
             <!-- Logo (Left) -->
-            <a class="navbar-brand d-flex align-items-center mb-0" href="#" style="padding: 0;">
-              <img src="./assets/images/logo.jpg" alt="Logo" style="height: 35px; width: auto;">
+            <a class="navbar-brand d-flex align-items-center mb-0" href="<?= RouteHelper::url('') ?>" style="padding: 0;">
+              <?= AssetHelper::img('logo.jpg', ['alt' => 'Logo', 'style' => 'height: 35px; width: auto;']) ?>
             </a>
 
             <!-- Centered NEXORA text (Always visible and centered) -->
@@ -66,24 +71,13 @@
         <?php endif; ?>
         
         <?php if (isset($_SESSION['error'])): ?>
-            <div class="alert alert-error"><?= htmlspecialchars($_SESSION['error']) ?></div>
+            <div class="alert alert-danger mt-3"><?= htmlspecialchars($_SESSION['error']) ?></div>
             <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
         
         <?= $content ?>
     </main>
-
-    <footer>
-        &copy; <?= date('Y') ?> PHP MVC Example
-    </footer>
-    <script>
-      const flipBox = document.getElementById("flipBox");
-
-      setInterval(() => {
-        flipBox.classList.toggle("flipped");
-      }, 5000);  // Flips every 5 seconds
-
-    </script>
-    <script src="./assets/js/app.js"></script>
+    <!-- <script src="./assets/js/app.js"></script> -->
+    <?= AssetHelper::js(['app'], true, true) ?>
 </body>
 </html>
