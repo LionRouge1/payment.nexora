@@ -23,7 +23,7 @@ class Payment extends TPayment {
 
   public function __construct($id) {
     parent::__construct();
-    if (is_array[$id]) {
+    if (is_array($id)) {
       $this->id = $id['id'];
       $this->website_id = $id['website_id'];
       $this->author_id = $id['author_id'];
@@ -39,9 +39,6 @@ class Payment extends TPayment {
       $this->id = $id;
       $this->loadPayment();
     }
-    // $this->id = $id;
-    // $this->loadPayment();
-    // $this->find($id);
   }
 
   // Getters
@@ -73,6 +70,10 @@ class Payment extends TPayment {
     return $this->payment_id;
   }
 
+  public static function find($id) {
+    return new Payment($id);
+  }
+
   public static function all() {
     $db = Database::getInstance();
     $stmt = $db->prepare("SELECT * FROM payments");
@@ -84,6 +85,25 @@ class Payment extends TPayment {
       $paymentObjects[] = new Payment($payment['id']);
     }
     return $paymentObjects;
+  }
+
+  public static function create($website_id, $author_id, $amount, $payment_id, $currency, $receipt_number, $ip_address, $status, $reference, $method) {
+    $db = Database::getInstance();
+    $stmt = $db->prepare("INSERT INTO payments (website_id, author_id, amount, currency, receipt_number, ip_address, payment_id, status, reference, method) VALUES (:website_id, :author_id, :amount, :currency, :receipt_number, :ip_address, :payment_id, :status, :reference, :method)");
+    $stmt->bindParam(':website_id', $website_id, PDO::PARAM_INT);
+    $stmt->bindParam(':author_id', $author_id, PDO::PARAM_INT);
+    $amount = $amount / 100;
+    $stmt->bindParam(':amount', $amount);
+    $status = ($status === 'success' && $amount >= 220) ? 1 : 0;
+    $stmt->bindParam(':status', $status, PDO::PARAM_INT);
+    $stmt->bindParam(':reference', $reference);
+    $stmt->bindParam(':method', $method);
+    $stmt->bindParam(':currency', $currency);
+    $stmt->bindParam(':receipt_number', $receipt_number);
+    $stmt->bindParam(':ip_address', $ip_address);
+    $stmt->bindParam(':payment_id', $payment_id);
+    $stmt->execute();
+    return self::find($db->lastInsertId());
   }
 
   public function loadPayment() {
