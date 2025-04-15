@@ -7,7 +7,7 @@
   
    
     <link rel="stylesheet" href="./assets/css/style.css">
-    <link rel="icon" href="./assets/images/logo.png">
+    <link rel="icon" href="./assets/images/logo.jpg">
     <!-- Linking Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
 
@@ -29,7 +29,7 @@
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
 />
-<link rel="stylesheet" href="styles.css" />
+<!-- <link rel="stylesheet" href="styles.css" /> -->
 <script src="https://js.paystack.co/v2/inline.js"></script>
 <body>
 
@@ -84,6 +84,6 @@
       }, 5000);  // Flips every 5 seconds
 
     </script>
-    <script src="/assets/js/app.js"></script>
+    <script src="./assets/js/app.js"></script>
 </body>
 </html>

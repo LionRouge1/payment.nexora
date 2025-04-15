@@ -53,7 +53,10 @@
                   <p>Domain Name: <b><?= htmlspecialchars($data['domain']) ?></b></p>
                   <p>Owned By: <b><?= htmlspecialchars($data['fullname']) ?></b></p>
                   <p>💳 Amount: <b>Ghc220 (Approx. $12.99)</b> per month</p>
-                  <button 
+                  <input type="hidden" name="website_id" id="website_id" value="<?= htmlspecialchars($data['website_id']) ?>">
+                  <input type="hidden" name="email" id="email" value="<?= htmlspecialchars($data['email']) ?>">
+                  <button
+                  id="payment-button"
                   style="background: linear-gradient(90deg, #59014e 38%, #b00333 100%); color: white; border-radius: 25px; padding: 12px; border: 10px; margin-bottom: 20px;" 
                   type="submit">
                   Pay Now

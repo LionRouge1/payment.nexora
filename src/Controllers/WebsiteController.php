@@ -30,17 +30,16 @@ class WebsiteController extends ApplicationController
         }
 
         $data = [
-            'fullname' => $author ? $author->getFullname() : null,
-            'error' => $error,
-            'domain' => $website ? $website->getDomain() : null,
-            'name' => $website ? $website->getName() : null,
+          'fullname' => $author ? $author->getFullname() : null,
+          'error' => $error,
+          'domain' => $website ? $website->getDomain() : null,
+          'name' => $website ? $website->getName() : null,
+          'email' => $author ? $author->getEmail() : null,
+          'website_id' => $website ? $website->getId() : null,
         ];
 
         $this->render('websites/index', compact('data'));
     }
-    // {
-    //     $this->render('website/about');
-    // }
 
     public function contact()
     {
