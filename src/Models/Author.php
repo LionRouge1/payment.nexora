@@ -1,9 +1,5 @@
 <?php
-// require_once 'modules.php';
-// require_once 'website.php';
-// require_once 'payment.php';
 namespace App\Models;
-// use App\Config\Database;
 use App\Models\Tables\TAuthor;
 use App\Models\Website;
 use App\Models\Payment;
