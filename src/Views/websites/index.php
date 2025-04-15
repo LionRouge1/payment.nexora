@@ -63,6 +63,7 @@
                   </button>
                 </div>
               <?php endif; ?>
+
             <?php endif; ?>
           <!-- <div style="margin-top: 30px; text-align: center;">
             <p>Domain Name: <b> www.yourbusiness.com </b></p>
