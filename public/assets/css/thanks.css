@@ -1,0 +1,26 @@
+.thanks-container {
+  overflow: hidden;
+  height: calc(100vh - 66px); /* Adjusted height */
+}
+
+.movable-svg {
+  position: absolute;
+  top: -230px; /* mobile-friendly default */
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: move;
+  z-index: -1;
+  max-width: 320px;
+}
+
+/* Desktop view adjustments */
+@media (min-width: 768px) {
+  .movable-svg {
+    top: -45%;
+    max-width: 520px;
+  }
+}
+
+.col-md-6 > div {
+  position: relative;
+}
