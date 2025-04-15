@@ -2,7 +2,7 @@
     "name": "crowdfrica/payment.nexora",
     "autoload": {
         "psr-4": {
-            "Crowdfrica\\PaymentNexora\\": "src/"
+            "App\\": "src/"
         }
     },
     "authors": [
@@ -11,6 +11,9 @@
             "email": "matchoudiavlessi@gmail.com"
         }
     ],
+    "config": {
+        "optimize-autoloader": true
+    },
     "require": {
         "vlucas/phpdotenv": "^5.6"
     }

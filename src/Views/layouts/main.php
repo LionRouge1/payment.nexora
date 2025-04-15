@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><?= htmlspecialchars($title ?? 'Payment Nexora') ?></title>
+  
+   
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <link rel="icon" href="./assets/images/logo.png">
+    <!-- Linking Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" />
+
+    <!-- Linking Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+
+    <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+/>
+<link rel="stylesheet" href="styles.css" />
+<script src="https://js.paystack.co/v2/inline.js"></script>
+<body>
+
+    <main>
+        <nav class="navbar" style="height: auto;">
+          <div class="container-fluid d-flex justify-content-between align-items-center position-relative" style="min-height: 50px;">
+            
+            <!-- Logo (Left) -->
+            <a class="navbar-brand d-flex align-items-center mb-0" href="#" style="padding: 0;">
+              <img src="./assets/images/logo.jpg" alt="Logo" style="height: 35px; width: auto;">
+            </a>
+
+            <!-- Centered NEXORA text (Always visible and centered) -->
+            <div class="position-absolute top-50 start-50 translate-middle text-center">
+              <a class="navbar-brand m-0" href="#" style="font-weight: bold; font-size: 1.2rem;">NEXORA</a>
+            </div>
+
+            <!-- Home Icon (Right) -->
+            <div class="d-flex align-items-center mb-0">
+              <a href="https://nexoragh.com/" class="nav-link p-0">
+                <span style="display: inline-block; padding: 5px 8px; border-radius: 7px;
+                            background: linear-gradient(90deg, #59014e 38%, #b00333 100%);
+                            color: white;">
+                  <i class="bi bi-house-fill" style="font-size: 1.3rem;"></i>
+                </span>
+              </a>
+            </div>
+
+          </div>
+        </nav>
+        <?php if (isset($_SESSION['message'])): ?>
+            <div class="alert alert-success"><?= htmlspecialchars($_SESSION['message']) ?></div>
+            <?php unset($_SESSION['message']); ?>
+        <?php endif; ?>
+        
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="alert alert-error"><?= htmlspecialchars($_SESSION['error']) ?></div>
+            <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
+        
+        <?= $content ?>
+    </main>
+
+    <footer>
+        &copy; <?= date('Y') ?> PHP MVC Example
+    </footer>
+    <script>
+      const flipBox = document.getElementById("flipBox");
+
+      setInterval(() => {
+        flipBox.classList.toggle("flipped");
+      }, 5000);  // Flips every 5 seconds
+
+    </script>
+    <script src="/assets/js/app.js"></script>
+</body>
+</html>

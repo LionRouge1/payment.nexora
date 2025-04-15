@@ -2,3 +2,7 @@
 info.php
 .env
 /.env
+/public/node_modules
+/public/build
+node_modules/
+/public/build/

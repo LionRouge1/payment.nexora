@@ -1,0 +1,22 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Redirect all requests to index.php except for existing files/directories
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [QSA,L]
+    
+    # Allow access to assets folder
+    RewriteRule ^assets/ - [L]
+</IfModule>
+
+# Prevent directory listing
+Options -Indexes
+
+# Set default charset
+AddDefaultCharset UTF-8
+
+# Set cache headers for assets
+<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico)$">
+    Header set Cache-Control "public, max-age=604800"
+</FilesMatch>
