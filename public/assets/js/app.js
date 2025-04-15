@@ -1,32 +1,87 @@
-// Confirm before delete
 document.addEventListener('DOMContentLoaded', () => {
-  const paymentBtn = document.getElementById('paymentBtn')
-  const email = document.getElementById('email').value
-  const websiteId = document.getElementById('website_id').value
-  console.log('payment btn', paymentBtn)
-  if (paymentBtn) {
-    // const popup = new Paystack();
+  const paymentBtn = document.getElementById('payment-button')
+  const flipBox = document.getElementById("flipBox");
 
-    paymentBtn.addEventListener('click', () => {
-      console.log('click')
-      const popup = new Paystack()
+  if(flipBox) {
+    setInterval(() => {
+      flipBox.classList.toggle("flipped");
+    }, 5000);
+  }
+
+  if (paymentBtn) {
+    paymentBtn.addEventListener('click', async() => {
+      const response = await fetch('/payment.nexora/public/initialize', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      const data = await response.json();
+      const popup = new PaystackPop();
       popup.newTransaction({
-        email: email,
-        amount: 220000,
+        email: data.email,
+        amount: data.amount,
+        metadata: {website_id: data.website_id},
         key: 'pk_test_d9b121d9c7e8280494f210cda9558515b08827be',
-        onSuccess: transaction => {
-          console.log(transaction)
+        onSuccess: async(transaction) => {
+          // console.log(transaction)
+            const request = await fetch('/payment.nexora/public/verify', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+              reference: transaction.reference,
+              _method: 'POST',
+            }).toString()
+            });
+
+          const response = await request.json();
+          if (response.status === 'success') {
+            // Handle successful payment
+            window.location.href = '/payment.nexora/public/payment/thanks';
+          } else {
+            console.log('Payment failed', response);
+          }
         },
         onLoad: response => {
           console.log('Loading...')
         },
-        onCancel: function () {
+        onCancel: async () => {
           // User closed the popup without completing the transaction
-          alert('Transaction was not completed.')
+          const request = await fetch('/payment.nexora/public/verify', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+              error: 'Transaction not completed. Kindly try again.',
+              _method: 'POST',
+            }).toString()
+          });
+
+          if(request.status === 500) {
+            // Handle successful error
+            
+            window.location.reload(true);
+          }
         },
-        onError: error => {
-          // Handle error
-          alert('An error occurred. Please try again.')
+        onError: async(error) => {
+          const request = await fetch('/payment.nexora/public/verify', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+              error: error.message,
+              _method: 'POST',
+            }).toString()
+          });
+          if(request.status === 500) {
+            // Handle successful error
+            window.location.reload(true);
+          }
         }
       })
     })
