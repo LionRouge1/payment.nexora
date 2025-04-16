@@ -10,17 +10,19 @@ class Author extends TAuthor {
   private $email;
   private $phone;
   private $whatsapp;
+  private $address;
   private $created_at;
   private $updated_at;
 
-  public function __construct($id = null) {
+  public function __construct($id) {
     parent::__construct();
     if (is_array($id)) {
       $this->id = $id['id'];
       $this->fullname = $id['fullname'];
       $this->email = $id['email'];
-      $this->phone = $id['number'];
+      $this->phone = $id['phone'];
       $this->whatsapp = $id['whatsapp'];
+      $this->address = $id['address'];
       $this->created_at = $id['created_at'];
       $this->updated_at = $id['updated_at'];
     } else {
@@ -59,8 +61,9 @@ class Author extends TAuthor {
       $this->id = $id;
       $this->fullname = $author['fullname'];
       $this->email = $author['email'];
-      $this->phone = $author['number'];
+      $this->phone = $author['phone'];
       $this->whatsapp = $author['whatsapp'];
+      $this->address = $author['address'];
       $this->created_at = $author['created_at'];
       $this->updated_at = $author['updated_at'];
     } else {
@@ -75,7 +78,7 @@ class Author extends TAuthor {
     $websites = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $websiteObjects = [];
     foreach ($websites as $website) {
-      $websiteObjects[] = new Website($website['id']);
+      $websiteObjects[] = new Website($website);
     }
     return $websiteObjects;
   }
@@ -87,7 +90,7 @@ class Author extends TAuthor {
     $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $paymentObjects = [];
     foreach ($payments as $payment) {
-      $paymentObjects[] = new Payment($payment['id']);
+      $paymentObjects[] = new Payment($payment);
     }
     return $paymentObjects;
   }
@@ -97,49 +100,22 @@ class Author extends TAuthor {
     $stmt->bindParam(':author_id', $this->id, PDO::PARAM_INT);
     $stmt->bindParam(':domain', $domain);
     $stmt->execute();
-    return $this->db->lastInsertId();
+    return new Website($this->db->lastInsertId());
   }
 
-  public function updateWebsite($id, $domain, $name) {
-    $stmt = $this->db->prepare("UPDATE websites SET domain = :domain, name = :name WHERE id = :id AND author_id = :author_id");
-    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+  public function addPayment($website_id, $amount, $payment_id, $currency, $payment_method, $reference, $status, $receipt_number, $ip_address) {
+    $stmt = $this->db->prepare("INSERT INTO payments (payment_id, amount, currency, payment_method, reference, status, receipt_number, ip_address, author_id, website_id) VALUES (:payment_id, :amount, :currency, :payment_method, :reference, :status, :receipt_number, :ip_address, :author_id, :website_id)");
     $stmt->bindParam(':author_id', $this->id, PDO::PARAM_INT);
-    $stmt->bindParam(':domain', $domain);
-    $stmt->bindParam(':name', $name);
-    return $stmt->execute();
-  }
-
-  public function deleteWebsite($id) {
-    $stmt = $this->db->prepare("DELETE FROM websites WHERE id = :id AND author_id = :author_id");
-    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-    $stmt->bindParam(':author_id', $this->id, PDO::PARAM_INT);
-    return $stmt->execute();
-  }
-
-  public function addPayment($website_id, $amount, $payment_id, $status, $reference, $method) {
-    $stmt = $this->db->prepare("INSERT INTO payments (author_id, amount, payment_id, status, reference, method, website_id) VALUES (:author_id, :amount, :payment_id, :status, :reference, :method, :website_id)");
-    $stmt->bindParam(':author_id', $this->id, PDO::PARAM_INT);
+    $stmt->bindParam(':website_id', $website_id, PDO::PARAM_INT);
     $stmt->bindParam(':amount', $amount);
     $stmt->bindParam(':payment_id', $payment_id);
-    $stmt->bindParam(':status', $status);
+    $stmt->bindParam(':currency', $currency);
+    $stmt->bindParam(':payment_method', $payment_method);
     $stmt->bindParam(':reference', $reference);
-    $stmt->bindParam(':method', $method);
-    $stmt->bindParam(':website_id', $website_id);
-    return $stmt->execute();
-  }
-
-  public function updatePayment($id, $status) {
-    $stmt = $this->db->prepare("UPDATE payments SET status = :status WHERE id = :id AND author_id = :author_id");
-    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-    $stmt->bindParam(':author_id', $this->id, PDO::PARAM_INT);
     $stmt->bindParam(':status', $status);
-    return $stmt->execute();
-  }
-
-  public function deletePayment($id) {
-    $stmt = $this->db->prepare("DELETE FROM payments WHERE id = :id AND author_id = :author_id");
-    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-    $stmt->bindParam(':author_id', $this->id, PDO::PARAM_INT);
-    return $stmt->execute();
+    $stmt->bindParam(':receipt_number', $receipt_number);
+    $stmt->bindParam(':ip_address', $ip_address);
+    $stmt->execute();
+    return new Payment($this->db->lastInsertId());
   }
 }
