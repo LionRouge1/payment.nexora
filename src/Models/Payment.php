@@ -4,126 +4,93 @@ namespace App\Models;
 use App\Config\Database;
 use PDO;
 use Exception;
-use App\Models\Tables\TPayment;
+use App\Models\ApplicationRecord;
 use App\Models\Website;
 use App\Models\Author;
 
-class Payment extends TPayment {
-  private $id;
-  private $website_id;
-  private $author_id;
-  private $amount;
-  private $method;
-  private $status;
-  private $reference;
-  private $currency;
-  private $payment_id;
-  private $created_at;
-  // protected $db;
+class Payment extends ApplicationRecord {
+  // private $id, $website_id, $author_id, $amount, $payment_method, $status, 
+  //         $reference, $currency, $payment_id, $receipt_number, $ip_address, 
+  //         $updated_at, $created_at;
 
-  public function __construct($id) {
+  public function __construct($data) {
     parent::__construct();
-    if (is_array($id)) {
-      $this->id = $id['id'];
-      $this->website_id = $id['website_id'];
-      $this->author_id = $id['author_id'];
-      $this->amount = $id['amount'];
-      $this->method = $id['method'];
-      $this->status = $id['status'];
-      $this->reference = $id['reference'];
-      $this->currency = $id['currency'];
-      $this->payment_id = $id['payment_id'];
-      $this->created_at = $id['created_at'];
-    }  else {
+    if (is_array($data)) {
+      foreach ($data as $key => $value) {
+        if (property_exists($this, $key)) {
+          $this->$key = $value;
+        }
+      }
+    } else {
       // If an ID is provided, load the payment details
-      $this->id = $id;
-      $this->loadPayment();
+      $this->id = $data;
+      $this->load($data);
     }
   }
 
   // Getters
-  public function getId() {
-    return $this->id;
-  }
-  public function getWebsiteId() {
-    return $this->website_id;
-  }
-  public function getAmount() {
-    return $this->amount;
-  }
-  public function getStatus() {
-    return $this->status;
-  }
-  public function getCreatedAt() {
-    return $this->created_at;
-  }
-  public function getMethod() {
-    return $this->method;
-  }
-  public function getReference() {
-    return $this->reference;
-  }
-  public function getCurrency() {
-    return $this->currency;
-  }
-  public function getPaymentId() {
-    return $this->payment_id;
-  }
+  // public function __call($name, $arguments) {
+  //   $property = strtolower(preg_replace('/^get/', '', $name));
+  //   if (property_exists($this, $property)) {
+  //     return $this->$property;
+  //   }
+  //   throw new Exception("Method $name does not exist");
+  // }
 
-  public static function find($id) {
-    return new Payment($id);
-  }
+  // public static function find($id) {
+  //   return new Payment($id);
+  // }
 
-  public static function all() {
-    $db = Database::getInstance();
-    $stmt = $db->prepare("SELECT * FROM payments");
-    $stmt->execute();
-    $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    $paymentObjects = [];
-    foreach ($payments as $payment) {
-      $paymentObjects[] = new Payment($payment);
-    }
-    return $paymentObjects;
-  }
+  // public static function all() {
+  //   $db = Database::getInstance();
+  //   $stmt = $db->prepare("SELECT * FROM payments");
+  //   $stmt->execute();
+  //   $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+  //   $paymentObjects = [];
+  //   foreach ($payments as $payment) {
+  //     $paymentObjects[] = new Payment($payment);
+  //   }
+  //   return $paymentObjects;
+  // }
 
-  public static function create($website_id, $author_id, $amount, $payment_id, $currency, $receipt_number, $ip_address, $status, $reference, $payment_method) {
-    $db = Database::getInstance();
-    $stmt = $db->prepare("INSERT INTO payments (payment_id, amount, currency, payment_method, reference, status, receipt_number, ip_address, website_id, author_id) VALUES ( :payment_id, :amount, :currency, :payment_method, :reference, :status, :receipt_number, :ip_address, :website_id, :author_id)");
-    $stmt->bindParam(':website_id', $website_id, PDO::PARAM_INT);
-    $stmt->bindParam(':author_id', $author_id, PDO::PARAM_INT);
-    $amount = $amount / 100;
-    $stmt->bindParam(':amount', $amount);
-    $stmt->bindParam(':status', $status, PDO::PARAM_INT);
-    $stmt->bindParam(':reference', $reference);
-    $stmt->bindParam(':method', $payment_method);
-    $stmt->bindParam(':currency', $currency);
-    $stmt->bindParam(':receipt_number', $receipt_number);
-    $stmt->bindParam(':ip_address', $ip_address);
-    $stmt->bindParam(':payment_id', $payment_id);
-    $stmt->execute();
-    return self::find($db->lastInsertId());
-  }
+  // public static function create($website_id, $author_id, $amount, $payment_id, $currency, $receipt_number, $ip_address, $status, $reference, $payment_method) {
+  //   $db = Database::getInstance();
+  //   $stmt = $db->prepare("INSERT INTO payments (payment_id, amount, currency, payment_method, reference, status, receipt_number, ip_address, website_id, author_id) VALUES ( :payment_id, :amount, :currency, :payment_method, :reference, :status, :receipt_number, :ip_address, :website_id, :author_id)");
+  //   $stmt->bindParam(':website_id', $website_id, PDO::PARAM_INT);
+  //   $stmt->bindParam(':author_id', $author_id, PDO::PARAM_INT);
+  //   $amount = $amount / 100;
+  //   $stmt->bindParam(':amount', $amount);
+  //   $stmt->bindParam(':status', $status, PDO::PARAM_INT);
+  //   $stmt->bindParam(':reference', $reference);
+  //   $stmt->bindParam(':method', $payment_method);
+  //   $stmt->bindParam(':currency', $currency);
+  //   $stmt->bindParam(':receipt_number', $receipt_number);
+  //   $stmt->bindParam(':ip_address', $ip_address);
+  //   $stmt->bindParam(':payment_id', $payment_id);
+  //   $stmt->execute();
+  //   return self::find($db->lastInsertId());
+  // }
 
-  public function loadPayment() {
-    $stmt = $this->db->prepare("SELECT * FROM payments WHERE id = :id");
-    $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
-    $stmt->execute();
-    $payment = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($payment) {
-      $this->website_id = $payment['website_id'];
-      $this->amount = $payment['amount'];
-      $this->status = $payment['status'];
-      $this->author_id = $payment['author_id'];
-      $this->reference = $payment['reference'];
-      $this->currency = $payment['currency'];
-      $this->payment_id = $payment['payment_id'];
-      $this->payment_method = $payment['payment_method'];
-      $this->receipt_number = $payment['receipt_number'];
-      $this->ip_address = $payment['ip_address'];
-      $this->updated_at = $payment['updated_at'];
-      $this->created_at = $payment['created_at'];
-    }
-  }
+  // public function loadPayment() {
+  //   $stmt = $this->db->prepare("SELECT * FROM payments WHERE id = :id");
+  //   $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+  //   $stmt->execute();
+  //   $payment = $stmt->fetch(PDO::FETCH_ASSOC);
+  //   if ($payment) {
+  //     $this->website_id = $payment['website_id'];
+  //     $this->amount = $payment['amount'];
+  //     $this->status = $payment['status'];
+  //     $this->author_id = $payment['author_id'];
+  //     $this->reference = $payment['reference'];
+  //     $this->currency = $payment['currency'];
+  //     $this->payment_id = $payment['payment_id'];
+  //     $this->payment_method = $payment['payment_method'];
+  //     $this->receipt_number = $payment['receipt_number'];
+  //     $this->ip_address = $payment['ip_address'];
+  //     $this->updated_at = $payment['updated_at'];
+  //     $this->created_at = $payment['created_at'];
+  //   }
+  // }
 
   public function author() {
     $stmt = $this->db->prepare("SELECT * FROM authors WHERE id = :author_id");

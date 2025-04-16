@@ -3,24 +3,24 @@ namespace App\Models;
 use App\Config\Database;
 use PDO;
 use Exception;
-use App\Models\Tables\TWebsite;
+use App\Models\ApplicationRecord;
 use App\Models\Author;
 
-class Website extends TWebsite {
-  private $id;
-  private $author_id;
-  private $domain;
-  private $name;
-  private $created_at;
+class Website extends ApplicationRecord {
+  // private $id;
+  // private $author_id;
+  // private $domain;
+  // private $name;
+  // private $created_at;
 
-  public function __construct($id) {
+  public function __construct($data) {
     parent::__construct();
-    if (is_array($id)) {
-      $this->id = $id['id'];
-      $this->author_id = $id['author_id'];
-      $this->domain = $id['domain'];
-      $this->name = $id['name'];
-      $this->created_at = $id['created_at'];
+    if (is_array($data)) {
+      foreach ($data as $key => $value) {
+        if (property_exists($this, $key)) {
+          $this->$key = $value;
+        }
+      }
     } else {
       $this->id = $id;
       $this->loadWebsite();
@@ -28,40 +28,40 @@ class Website extends TWebsite {
   }
 
   // Getters
-  public function getId() {
-    return $this->id;
-  }
-  public function getAuthorId() {
-    return $this->author_id;
-  }
-  public function getDomain() {
-    return $this->domain;
-  }
-  public function getName() {
-    return $this->name;
-  }
-  public function getCreatedAt() {
-    return $this->created_at;
-  }
+  // public function getId() {
+  //   return $this->id;
+  // }
+  // public function getAuthorId() {
+  //   return $this->author_id;
+  // }
+  // public function getDomain() {
+  //   return $this->domain;
+  // }
+  // public function getName() {
+  //   return $this->name;
+  // }
+  // public function getCreatedAt() {
+  //   return $this->created_at;
+  // }
 
-  public function loadWebsite() {
-    $stmt = $this->db->prepare("SELECT * FROM websites WHERE id = :id");
-    $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
-    $stmt->execute();
-    $website = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($website) {
-      $this->author_id = $website['author_id'];
-      $this->domain = $website['domain'];
-      $this->created_at = $website['created_at'];
-      $this->name = $website['name'];
-    } else {
-      throw new Exception("Website not found");
-    }
-  }
+  // public function loadWebsite() {
+  //   $stmt = $this->db->prepare("SELECT * FROM websites WHERE id = :id");
+  //   $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+  //   $stmt->execute();
+  //   $website = $stmt->fetch(PDO::FETCH_ASSOC);
+  //   if ($website) {
+  //     $this->author_id = $website['author_id'];
+  //     $this->domain = $website['domain'];
+  //     $this->created_at = $website['created_at'];
+  //     $this->name = $website['name'];
+  //   } else {
+  //     throw new Exception("Website not found");
+  //   }
+  // }
 
-  public static function find($id) {
-    return new Website($id);
-  }
+  // public static function find($id) {
+  //   return new Website($id);
+  // }
 
   public static function findByDomain($domain) {
     $db = Database::getInstance();
@@ -94,16 +94,15 @@ class Website extends TWebsite {
     return $paymentObjects;
   }
 
-  public function addPayment($amount, $payment_id, $currency, $receipt_number, $ip_address, $status, $reference, $method) {
-    $stmt = $this->db->prepare("INSERT INTO payments (website_id, author_id, amount, currency, receipt_number, ip_address, payment_id, status, reference, method) VALUES (:website_id, :author_id, :amount, :currency, :receipt_number, :ip_address, :payment_id, :status, :reference, :method)");
+  public function addPayment($amount, $payment_id, $currency, $payment_method, $reference, $status, $receipt_number, $ip_address) {
+    $stmt = $this->db->prepare("INSERT INTO payments (payment_id, amount, currency, payment_method, reference, status, receipt_number, ip_address, author_id, website_id) VALUES (:payment_id, :amount, :currency, :payment_method, :reference, :status, :receipt_number, :ip_address, :author_id, :website_id)");
     $stmt->bindParam(':website_id', $this->id, PDO::PARAM_INT);
     $stmt->bindParam(':author_id', $this->author_id, PDO::PARAM_INT);
     $amount = $amount/100;
     $stmt->bindParam(':amount', $amount);
-    $status = ($status === 'success') ? 1 : 0;
     $stmt->bindParam(':status', $status, PDO::PARAM_INT);
     $stmt->bindParam(':reference', $reference);
-    $stmt->bindParam(':method', $method);
+    $stmt->bindParam(':payment_method', $method);
     $stmt->bindParam(':currency', $currency);
     $stmt->bindParam(':receipt_number', $receipt_number);
     $stmt->bindParam(':ip_address', $ip_address);
@@ -112,11 +111,11 @@ class Website extends TWebsite {
     return $this->db->lastInsertId();
   }
 
-  public function delete() {
-    $stmt = $this->db->prepare("DELETE FROM websites WHERE id = :id");
-    $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
-    return $stmt->execute();
-  }
+  // public function delete() {
+  //   $stmt = $this->db->prepare("DELETE FROM websites WHERE id = :id");
+  //   $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+  //   return $stmt->execute();
+  // }
 
   public function unpaid_months() {
     $currentMonth = date('m');
