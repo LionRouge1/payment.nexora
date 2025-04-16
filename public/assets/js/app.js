@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const paymentBtn = document.getElementById('payment-button')
-  const flipBox = document.getElementById('flipBox')
+  const paymentBtn = document.getElementById('payment-button');
+  const flipBox = document.getElementById('flipBox');
 
   if (flipBox) {
     setInterval(() => {
       flipBox.classList.toggle('flipped')
-    }, 5000)
+    }, 5000);
   }
 
   if (paymentBtn) {
@@ -15,10 +15,10 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: {
           'Content-Type': 'application/json'
         }
-      })
+      });
 
-      const data = await response.json()
-      const popup = new PaystackPop()
+      const data = await response.json();
+      const popup = new PaystackPop();
       popup.newTransaction({
         email: data.email,
         amount: data.amount,
@@ -82,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.reload(true)
           }
         }
-      })
-    })
+      });
+    });
   }
 })
