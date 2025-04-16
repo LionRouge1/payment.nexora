@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS payments (
   amount DECIMAL(10, 2) NOT NULL,
   currency VARCHAR(10) NOT NULL,
   payment_method VARCHAR(50),
-  references VARCHAR(200) NOT NULL UNIQUE,
+  reference VARCHAR(200) NOT NULL UNIQUE,
   status ENUM('pending', 'completed', 'failed') DEFAULT 'pending',
   receipt_number VARCHAR(255),
   ip_address VARCHAR(50) NOT NULL,
@@ -41,8 +41,8 @@ CREATE TABLE IF NOT EXISTS payments (
   FOREIGN KEY (author_id) REFERENCES authors(id) ON DELETE SET NULL
 );
 
-CREATE UNIQUE INDEX idx_domain_unique ON websites(LOWER(domain));
-CREATE UNIQUE INDEX idx_payment_id_unique ON payments(LOWER(payment_id));
-CREATE UNIQUE INDEX idx_references_unique ON payments(LOWER(references));
-CREATE UNIQUE INDEX idx_email_unique ON authors(LOWER(email));
-CREATE UNIQUE INDEX idx_phone_unique ON authors(LOWER(phone));
+CREATE UNIQUE INDEX idx_domain_unique ON websites((LOWER(domain)));
+CREATE UNIQUE INDEX idx_payment_id_unique ON payments(payment_id);
+CREATE UNIQUE INDEX idx_references_unique ON payments(reference);
+CREATE UNIQUE INDEX idx_email_unique ON authors(email);
+CREATE UNIQUE INDEX idx_phone_unique ON authors(phone);
