@@ -81,23 +81,21 @@ class Payment extends TPayment {
     $payments = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $paymentObjects = [];
     foreach ($payments as $payment) {
-      // var_dump($payment);
-      $paymentObjects[] = new Payment($payment['id']);
+      $paymentObjects[] = new Payment($payment);
     }
     return $paymentObjects;
   }
 
-  public static function create($website_id, $author_id, $amount, $payment_id, $currency, $receipt_number, $ip_address, $status, $reference, $method) {
+  public static function create($website_id, $author_id, $amount, $payment_id, $currency, $receipt_number, $ip_address, $status, $reference, $payment_method) {
     $db = Database::getInstance();
-    $stmt = $db->prepare("INSERT INTO payments (website_id, author_id, amount, currency, receipt_number, ip_address, payment_id, status, reference, method) VALUES (:website_id, :author_id, :amount, :currency, :receipt_number, :ip_address, :payment_id, :status, :reference, :method)");
+    $stmt = $db->prepare("INSERT INTO payments (payment_id, amount, currency, payment_method, reference, status, receipt_number, ip_address, website_id, author_id) VALUES ( :payment_id, :amount, :currency, :payment_method, :reference, :status, :receipt_number, :ip_address, :website_id, :author_id)");
     $stmt->bindParam(':website_id', $website_id, PDO::PARAM_INT);
     $stmt->bindParam(':author_id', $author_id, PDO::PARAM_INT);
     $amount = $amount / 100;
     $stmt->bindParam(':amount', $amount);
-    $status = ($status === 'success' && $amount >= 220) ? 1 : 0;
     $stmt->bindParam(':status', $status, PDO::PARAM_INT);
     $stmt->bindParam(':reference', $reference);
-    $stmt->bindParam(':method', $method);
+    $stmt->bindParam(':method', $payment_method);
     $stmt->bindParam(':currency', $currency);
     $stmt->bindParam(':receipt_number', $receipt_number);
     $stmt->bindParam(':ip_address', $ip_address);
@@ -112,7 +110,6 @@ class Payment extends TPayment {
     $stmt->execute();
     $payment = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($payment) {
-      // $this->id = $id;
       $this->website_id = $payment['website_id'];
       $this->amount = $payment['amount'];
       $this->status = $payment['status'];
@@ -120,7 +117,10 @@ class Payment extends TPayment {
       $this->reference = $payment['reference'];
       $this->currency = $payment['currency'];
       $this->payment_id = $payment['payment_id'];
-      $this->method = $payment['method'];
+      $this->payment_method = $payment['payment_method'];
+      $this->receipt_number = $payment['receipt_number'];
+      $this->ip_address = $payment['ip_address'];
+      $this->updated_at = $payment['updated_at'];
       $this->created_at = $payment['created_at'];
     }
   }
@@ -131,7 +131,7 @@ class Payment extends TPayment {
     $stmt->execute();
     $author = $stmt->fetch(PDO::FETCH_ASSOC);
     if($author) {
-      return new Author($author['id']);
+      return new Author($author);
     }
     throw new Exception("Author not found");
   }
@@ -142,7 +142,7 @@ class Payment extends TPayment {
     $stmt->execute();
     $website = $stmt->fetch(PDO::FETCH_ASSOC);
     if($website) {
-      return new Website($website['id']);
+      return new Website($website);
     }
     throw new Exception("Website not found");
   }
