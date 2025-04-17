@@ -24,6 +24,7 @@ class WebsiteController extends ApplicationController
         if ($domain) {
           try {
             $domain = preg_replace('/^(https?:\/\/)?(www\.)?/', '', rtrim($domain, '/'));
+            $domain = strtolower($domain);
             $website = Website::findByDomain($domain);
             $author = $website->author();
           } catch (\Exception $e) {
