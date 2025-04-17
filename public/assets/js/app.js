@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
         email: data.email,
         amount: data.amount,
         metadata: { website_id: data.website_id },
-        key: process.env.PAYSTACK_PK || '',
+        key: window.config.paystackKey,
         onSuccess: async transaction => {
           const request = await fetch('/payment.nexora/public/verify', {
             method: 'POST',
