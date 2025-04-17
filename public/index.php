@@ -15,17 +15,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['_method'])) {
 // Route configuration
 $routes = [
     'GET' => [
-        '/payment.nexora/public/' => ['WebsiteController', 'index'],
-        '/payment.nexora/public/payment/thanks' => ['PaymentController', 'thanks'],
-        // '/payment.nexora/public/payments' => ['PaymentController', 'index'],
+        '/' => ['WebsiteController', 'index'],
+        '/payment/thanks' => ['PaymentController', 'thanks'],
+        // '/payments' => ['PaymentController', 'index'],
         // '/payments/create' => ['UserController', 'create'],
         // '/payments/(\d+)' => ['UserController', 'show'],
         // '/payments/(\d+)/edit' => ['UserController', 'edit']
     ],
     'POST' => [
-        '/payment.nexora/public/' => ['WebsiteController', 'search'],
-        '/payment.nexora/public/initialize' => ['PaymentController', 'initialize'],
-        '/payment.nexora/public/verify' => ['PaymentController', 'verify'],
+        '/' => ['WebsiteController', 'search'],
+        '/initialize' => ['PaymentController', 'initialize'],
+        '/verify' => ['PaymentController', 'verify'],
         // '/payments' => ['UserController', 'store']
     ],
     // 'PUT' => [
