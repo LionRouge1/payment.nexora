@@ -33,12 +33,12 @@ class WebsiteController extends ApplicationController
             $website = null;
         }
 
-        $website_id = $website ? $website->getId() : null;
-        $email = $author ? $author->getEmail() : null;
-        $fullname = $author ? $author->getFullname() : null;
-        $name = $website ? $website->getName() : null;
-        $domain = $website ? $website->getDomain() : null;
-        $author_id = $author ? $author->getId() : null;
+        $website_id = $website ? $website->id : null;
+        $email = $author ? $author->email : null;
+        $fullname = $author ? $author->fullname : null;
+        $name = $website ? $website->name : null;
+        $domain = $website ? $website->domain : null;
+        $author_id = $author ? $author->id : null;
 
         $data = [
           'fullname' => $fullname,
@@ -57,14 +57,4 @@ class WebsiteController extends ApplicationController
 
         $this->render('websites/index', compact('data'));
     }
-
-    // public function contact()
-    // {
-    //     $this->render('website/contact');
-    // }
-
-    // public function services()
-    // {
-    //     $this->render('website/services');
-    // }
 }
