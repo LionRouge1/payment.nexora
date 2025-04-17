@@ -2,7 +2,7 @@
 namespace App\Models;
 
 use Doctrine\Inflector\InflectorFactory;
-use App\Database;
+use App\Config\Database;
 use PDO;
 use Exception;
 /**
@@ -14,13 +14,14 @@ use Exception;
 
 class ApplicationRecord {
   protected $db, $tableName, $className, $newRecord = false;
-  private $inflector;
 
   public function __construct() {
     $this->db = Database::getInstance();
-    $this->inflector = InflectorFactory::create()->build();
+    $inflector = InflectorFactory::create()->build();
     $this->className = get_class($this);
-    $this->tableName = strtolower($this->inflector->pluralize($this->className));
+    $tableName = strtolower($inflector->pluralize($this->className));
+    $split = explode("\\", $tableName);
+    $this->tableName = end($split);
   }
 
   public function __get($property) {
@@ -45,7 +46,7 @@ class ApplicationRecord {
   }
 
   public function load($id) {
-    $stmt = $this->db->prepare("SELECT * FROM " . $this->tableName . "WHERE id = :id");
+    $stmt = $this->db->prepare("SELECT * FROM " . $this->tableName . " WHERE id = :id");
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
     $record = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -65,10 +66,13 @@ class ApplicationRecord {
     $db = Database::getInstance();
     $inflector = InflectorFactory::create()->build();
     $tableName = strtolower($inflector->pluralize($className));
-    $stmt = $db->prepare("SELECT * FROM " . $tableName . "WHERE $column = :value");
+    $split = explode("\\", $tableName);
+    $tableName = end($split);
+    $stmt = $db->prepare("SELECT * FROM " . $tableName . " WHERE $column = :value");
     $stmt->bindParam(':value', $value);
     $stmt->execute();
     $record = $stmt->fetch(PDO::FETCH_ASSOC);
+    // return $record;
     if ($record) {
       return new $className($record);
     }
@@ -80,6 +84,8 @@ class ApplicationRecord {
     $db = Database::getInstance();
     $inflector = InflectorFactory::create()->build();
     $tableName = strtolower($inflector->pluralize($className));
+    $split = explode("\\", $tableName);
+    $tableName = end($split);
     $stmt = $db->prepare("SELECT * FROM " . $tableName);
     $stmt->execute();
     $records = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -95,6 +101,8 @@ class ApplicationRecord {
     $db = Database::getInstance();
     $inflector = InflectorFactory::create()->build();
     $tableName = strtolower($inflector->pluralize($className));
+    $split = explode("\\", $tableName);
+    $tableName = end($split);
     $columns = implode(", ", array_keys($data));
     $placeholders = ":" . implode(", :", array_keys($data));
     $stmt = $db->prepare("INSERT INTO " . $tableName . " ($columns) VALUES ($placeholders)");
@@ -109,7 +117,8 @@ class ApplicationRecord {
   public function save() {
     $properties = ['id', 'db', 'tableName', 'className', 'inflector', 'newRecord', 'created_at', 'updated_at'];
 
-    if($this->newRecord && isset($this->id) && !empty($this->id)) {
+    if($this->newRecord && isset($this->id) && !empty($this->id) && $this->id) {
+      $this->newRecord = false;
       $data = [];
       foreach ($this as $key => $value) {
         if (!in_array($key, $properties)) {
