@@ -63,32 +63,8 @@ foreach ($routes[$requestMethod] ?? [] as $pattern => [$controllerName, $action]
 }
 
 if (!$matched) {
-    $controller = new App\Controllers\PaymentController();
+    $controller = new App\Controllers\ApplicationController();
     $controller->notFound();
 }
-  // $website = null;
-  // if($_SERVER['REQUEST_METHOD'] === 'POST') {
-  //   require_once __DIR__.'../modules/tables/TWebsite.php';
-  //   require_once __DIR__.'./modules/website.php';
-  //   require_once __DIR__.'../modules/author.php';
-
-  //   $domain = $_GET['domain'];
-  //   $domain = preg_replace('/^(https?:\/\/)?(www\.)?/', '', rtrim($domain, '/'));
-  //   $table = new TWebsite();
-  //   $website = $table->findByDomain($domain);
-  //   // if ($website) {
-  //   //   echo json_encode([
-  //   //     'status' => 'success',
-  //   //     'domain name' => $website->domain,
-  //   //     'website id' => $website->id,
-  //   //     'author' => (new Author($website->author_id))->fullname,
-  //   //     'unpaid_months' => $website->unpaid_months,
-  //   //   ]);
-  //   //   exit;
-  //   // } else {
-  //   //   echo json_encode(['error' => 'Website not found']);
-  //   //   exit;
-  //   // }
-  // }
 ?>
 
