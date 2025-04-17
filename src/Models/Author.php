@@ -5,14 +5,7 @@ use App\Models\Website;
 use App\Models\Payment;
 
 class Author extends ApplicationRecord {
-  // private $id;
-  // private $fullname;
-  // private $email;
-  // private $phone;
-  // private $whatsapp;
-  // private $address;
-  // private $created_at;
-  // private $updated_at;
+  protected $id, $fullname, $email, $phone, $whatsapp, $address, $created_at, $updated_at;
 
   public function __construct($data) {
     parent::__construct();
@@ -28,45 +21,6 @@ class Author extends ApplicationRecord {
       $this->load($data);
     }
   }
-
-  // Getters
-  // public function getId() {
-  //   return $this->id;
-  // }
-  // public function getFullname() {
-  //   return $this->fullname;
-  // }
-  // public function getEmail() {
-  //   return $this->email;
-  // }
-  // public function getPhone() {
-  //   return $this->phone;
-  // }
-  // public function getWhatsapp() {
-  //   return $this->whatsapp;
-  // }
-  // public function getCreatedAt() {
-  //   return $this->created_at;
-  // }
-
-  // public function loadAuthor() {
-  //   $stmt = $this->db->prepare("SELECT * FROM authors WHERE id = :id");
-  //   $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-  //   $stmt->execute();
-  //   $author = $stmt->fetch(PDO::FETCH_ASSOC);
-  //   if ($author) {
-  //     $this->id = $id;
-  //     $this->fullname = $author['fullname'];
-  //     $this->email = $author['email'];
-  //     $this->phone = $author['phone'];
-  //     $this->whatsapp = $author['whatsapp'];
-  //     $this->address = $author['address'];
-  //     $this->created_at = $author['created_at'];
-  //     $this->updated_at = $author['updated_at'];
-  //   } else {
-  //     throw new Exception("Author not found");
-  //   }
-  // }
 
   public function websites() {
     $stmt = $this->db->prepare("SELECT * FROM websites WHERE author_id = :id");
