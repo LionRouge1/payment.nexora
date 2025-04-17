@@ -13,7 +13,7 @@ class RouteHelper
     public static function url(string $routeName, array $params = []): string
     {
         // Assuming you have a method to get the base URL
-        $baseUrl = '/payment.nexora/public/'; // Replace with your actual base URL
+        $baseUrl = '/'; // Replace with your actual base URL
 
         // Build the query string from the parameters
         $queryString = http_build_query($params);
