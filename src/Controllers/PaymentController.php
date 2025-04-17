@@ -1,8 +1,6 @@
 <?php
 namespace App\Controllers;
-
 use App\Controllers\ApplicationController;
-
 use App\Models\Payment;
 
 class PaymentController extends ApplicationController
@@ -89,19 +87,21 @@ class PaymentController extends ApplicationController
       }
 
       try {
-        $payment = Payment::create(
-          $website_id,
-          $author_id,
-          $data['amount'],
-          $data['id'],
-          $data['currency'],
-          $data['receipt_number'],
-          $data['ip_address'],
-          $data['status'],
-          $data['reference'],
-          $data['channel']
-        );
-      } catch (e) {
+        $payment = [
+          'website_id' => $website_id,
+          'author_id' => $author_id,
+          'amount' => $data['amount'],
+          'payment_id' => $data['id'],
+          'currency' => $data['currency'],
+          'receipt_number' => $data['receipt_number'],
+          'reference' => $data['reference'],
+          'ip_address' => $data['ip_address'],
+          'status' => $data['status'],
+          'payment_method' => $data['channel']
+        ];
+
+        $payment = Payment::create($payment);
+      } catch (Exception $e) {
         http_response_code(500);
         $_SESSION['error'] = 'Failed to save payment';
         echo json_encode(['error' => 'Failed to save payment']);
