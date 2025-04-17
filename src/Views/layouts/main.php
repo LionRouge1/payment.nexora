@@ -7,7 +7,21 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><?= htmlspecialchars($title ?? 'Payment Nexora') ?></title>
+    <title><?= htmlspecialchars($title ?? 'WebStarter Plan Payment') ?></title>
+    <meta name="description" content="<?= htmlspecialchars($description ?? 'WebStarter Plan Payment') ?>" />
+    <meta name="keywords" content="<?= htmlspecialchars($keywords ?? 'WebStarter Plan Payment') ?>" />
+    <meta name="author" content="<?= htmlspecialchars($author ?? 'Nexora') ?>" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#59014e" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Nexora" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Nexora" />
+    <meta name="msapplication-TileColor" content="#59014e" />
+    <meta name="msapplication-TileImage" content="/assets/images/logo.jpg" />
+    <meta name="theme-color" content="#59014e" />
   
     <link rel="icon" href="/assets/images/logo.jpg">
     <!-- Linking Font Awesome for icons -->
