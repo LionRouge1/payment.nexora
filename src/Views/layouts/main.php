@@ -31,10 +31,13 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
     />
-    <!-- <link rel="stylesheet" href="./assets/css/style.css">
-    <link rel="stylesheet" href="./assets/css/thanks.css"> -->
     <?= AssetHelper::css(['style', 'thanks'], true) ?>
     <script src="https://js.paystack.co/v2/inline.js"></script>
+    <script>
+      window.config = {
+        paystackKey: "<?= $_ENV['PAYSTACK_PUBLIC_KEY'] ?>",
+      };
+    </script>
 </head>
 <body>
 
@@ -77,7 +80,6 @@
         
         <?= $content ?>
     </main>
-    <!-- <script src="./assets/js/app.js"></script> -->
     <?= AssetHelper::js(['app'], true, true) ?>
 </body>
 </html>
