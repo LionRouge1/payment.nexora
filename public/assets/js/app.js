@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (paymentBtn) {
     paymentBtn.addEventListener('click', async () => {
-      const response = await fetch('/payment.nexora/public/initialize', {
+      const response = await fetch('/initialize', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         metadata: { website_id: data.website_id },
         key: window.config.paystackKey,
         onSuccess: async transaction => {
-          const request = await fetch('/payment.nexora/public/verify', {
+          const request = await fetch('/verify', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const response = await request.json()
           if (response.status === 'success') {
             // Handle successful payment
-            window.location.href = '/payment.nexora/public/payment/thanks'
+            window.location.href = '/payment/thanks'
           } else {
             console.log('Payment failed', response)
           }
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         onCancel: async () => {
           // User closed the popup without completing the transaction
-          const request = await fetch('/payment.nexora/public/verify', {
+          const request = await fetch('/verify', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
           }
         },
         onError: async error => {
-          const request = await fetch('/payment.nexora/public/verify', {
+          const request = await fetch('/verify', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/x-www-form-urlencoded'
