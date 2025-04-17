@@ -7,11 +7,7 @@ use App\Models\ApplicationRecord;
 use App\Models\Author;
 
 class Website extends ApplicationRecord {
-  // private $id;
-  // private $author_id;
-  // private $domain;
-  // private $name;
-  // private $created_at;
+  protected $id, $author_id, $domain, $name, $updated_at, $created_at;
 
   public function __construct($data) {
     parent::__construct();
@@ -22,46 +18,10 @@ class Website extends ApplicationRecord {
         }
       }
     } else {
-      $this->id = $id;
-      $this->loadWebsite();
+      $this->id = $data;
+      $this->load($data);
     }
   }
-
-  // Getters
-  // public function getId() {
-  //   return $this->id;
-  // }
-  // public function getAuthorId() {
-  //   return $this->author_id;
-  // }
-  // public function getDomain() {
-  //   return $this->domain;
-  // }
-  // public function getName() {
-  //   return $this->name;
-  // }
-  // public function getCreatedAt() {
-  //   return $this->created_at;
-  // }
-
-  // public function loadWebsite() {
-  //   $stmt = $this->db->prepare("SELECT * FROM websites WHERE id = :id");
-  //   $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
-  //   $stmt->execute();
-  //   $website = $stmt->fetch(PDO::FETCH_ASSOC);
-  //   if ($website) {
-  //     $this->author_id = $website['author_id'];
-  //     $this->domain = $website['domain'];
-  //     $this->created_at = $website['created_at'];
-  //     $this->name = $website['name'];
-  //   } else {
-  //     throw new Exception("Website not found");
-  //   }
-  // }
-
-  // public static function find($id) {
-  //   return new Website($id);
-  // }
 
   public static function findByDomain($domain) {
     $db = Database::getInstance();
@@ -110,12 +70,6 @@ class Website extends ApplicationRecord {
     $stmt->execute();
     return $this->db->lastInsertId();
   }
-
-  // public function delete() {
-  //   $stmt = $this->db->prepare("DELETE FROM websites WHERE id = :id");
-  //   $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
-  //   return $stmt->execute();
-  // }
 
   public function unpaid_months() {
     $currentMonth = date('m');
