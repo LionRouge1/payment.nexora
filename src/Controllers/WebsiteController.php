@@ -14,6 +14,16 @@ class WebsiteController extends ApplicationController
     public function search()
     {
         $error = null;
+        $curl = 'https://api.currencyfreaks.com/v2.0/rates/latest?apikey=3d68979846b346cf9374ef309b793d78&symbols=GHS';
+        $response = file_get_contents($curl);
+        $response = json_decode($response, true);
+        $rate = $response['rates']['GHS'] ?? null;
+        if ($rate) {
+            $rate = number_format(250/$rate, 2);
+        } else {
+            $error = 'Unable to fetch exchange rate.';
+        }
+
         if(!isset($_POST['domain']) || empty($_POST['domain'])) {
             $error = 'Domain field cannot be empty.';
         }
@@ -34,6 +44,8 @@ class WebsiteController extends ApplicationController
             $website = null;
         }
 
+
+
         $website_id = $website ? $website->id : null;
         $email = $author ? $author->email : null;
         $fullname = $author ? $author->fullname : null;
@@ -48,6 +60,7 @@ class WebsiteController extends ApplicationController
           'name' => $name,
           'email' => $email,
           'website_id' => $website_id,
+          'rate' => $rate,
         ];
         $_SESSION['website_id'] = $website_id;
         $_SESSION['fullname'] = $fullname;
