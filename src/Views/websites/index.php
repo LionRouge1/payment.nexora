@@ -52,7 +52,7 @@
                 <div style="margin-top: 30px; text-align: center;">
                   <p>Domain Name: <b><?= htmlspecialchars($data['domain']) ?></b></p>
                   <p>Owned By: <b><?= htmlspecialchars($data['fullname']) ?></b></p>
-                  <p>💳 Amount: <b>Ghc220 (Approx. $12.99)</b> per month</p>
+                  <p>💳 Amount: <b>Ghc250 (Approx. <?= $data['rate'] ?>)</b> per month</p>
                   <input type="hidden" name="website_id" id="website_id" value="<?= htmlspecialchars($data['website_id']) ?>">
                   <input type="hidden" name="email" id="email" value="<?= htmlspecialchars($data['email']) ?>">
                   <button
