@@ -10,7 +10,7 @@ class PaymentController extends ApplicationController
     if (!isset($_SESSION['website_id']) || !isset($_SESSION['email'])) {
       http_response_code(400);
       $_SESSION['error'] = 'Website ID or email not found in session';
-      header('Location: /payment.nexora/public/');
+      header('Location: /');
       die();
       return;
     }
@@ -134,7 +134,7 @@ class PaymentController extends ApplicationController
   {
     if (!isset($_SESSION['success']) || $_SESSION['success'] !== true) {
       http_response_code(400);
-      header('Location: /payment.nexora/public/');
+      header('Location: /');
       die();
       return;
     }
