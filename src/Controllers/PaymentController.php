@@ -18,7 +18,7 @@ class PaymentController extends ApplicationController
     $data = [
       "email" => $_SESSION['email'],
       "website_id" => $_SESSION['website_id'],
-      "amount" =>  220 * 100,
+      "amount" =>  250 * 100,
     ];
 
     http_response_code(200);

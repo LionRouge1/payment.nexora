@@ -55,7 +55,7 @@ foreach ($routes[$requestMethod] ?? [] as $pattern => [$controllerName, $action]
         $matched = true;
         $controllerClass = "App\\Controllers\\{$controllerName}";
         $controller = new $controllerClass();
-        
+
         array_shift($matches); // Remove full match
         call_user_func_array([$controller, $action], $matches);
         break;
